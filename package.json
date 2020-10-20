@@ -1,0 +1,28 @@
+{
+  "name": "jobly-node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HeyImMatt/springboard-jobly-node.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HeyImMatt/springboard-jobly-node/issues"
+  },
+  "homepage": "https://github.com/HeyImMatt/springboard-jobly-node#readme",
+  "dependencies": {
+    "ajv": "^6.12.6",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "pg": "^8.4.1",
+    "supertest": "^5.0.0"
+  }
+}
