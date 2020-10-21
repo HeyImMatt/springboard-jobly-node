@@ -1,7 +1,7 @@
 const sqlForPartialUpdate = require("../../helpers/partialUpdate");
 
 describe("partialUpdate()", () => {
-  it("should generate a proper partial update query with just 1 field", () => {
+  it("should generate a proper partial update query", () => {
     const table = 'companies';
     const items = {
       num_employees: 5,
