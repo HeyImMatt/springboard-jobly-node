@@ -40,7 +40,7 @@ router.get('/:handle', async (req, res, next) => {
   }
 })
 
-router.put('/:handle', async (req, res, next) => {
+router.patch('/:handle', async (req, res, next) => {
   try {
     const valid = ajv.validate(companySchema, req.body);
     if (!valid) {
