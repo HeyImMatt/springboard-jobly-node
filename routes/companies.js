@@ -43,4 +43,18 @@ router.get('/:handle', async (req, res, next) => {
   }
 })
 
+router.put('/:handle', async (req, res, next) => {
+  try {
+    const valid = ajv.validate(companySchema, req.body);
+    if (!valid) {
+      const listOfErrors = ajv.errors.map(error => error.message);
+      throw new ExpressError(listOfErrors, 400);
+    }
+    const company = await Company.update(req.params.handle, req.body);
+    return res.json({ company });
+  } catch (e) {
+    return next(e);
+  }
+})
+
 module.exports = router;
