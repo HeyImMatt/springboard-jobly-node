@@ -85,3 +85,16 @@ describe('GET /companies/[handle]', () => {
       expect(resp.statusCode).toBe(404);
     })
 })
+
+describe('DELETE /companies/[handle]', () => {
+  test('Deletes a company', async () => {
+    const resp = await request(app).delete(`/companies/${testCompany1.handle}`);
+    expect(resp.statusCode).toBe(200);
+    expect(resp.body.message).toEqual('Company deleted');;
+    })
+
+    test('Returns 404 error if company not found', async () => {
+      const resp = await request(app).delete('/companies/nocompany');
+      expect(resp.statusCode).toBe(404);
+    })
+})
