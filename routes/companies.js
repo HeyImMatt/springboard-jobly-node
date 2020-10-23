@@ -1,9 +1,12 @@
-const { compareSync } = require('bcrypt');
 const express = require('express');
 const ExpressError = require('../helpers/expressError');
 const Company = require('../models/company')
+const Ajv = require('ajv');
+const companySchema = require('../schemas/companySchema.json')
 
 const router = new express.Router();
+
+const ajv = new Ajv();
 
 router.get('/', async (req, res, next) => {
   try {
@@ -16,7 +19,12 @@ router.get('/', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    if (Company.findOne(req.body.name)) {
+    const valid = ajv.validate(companySchema, req.body);
+    if (!valid) {
+      const listOfErrors = ajv.errors.map(error => error.message);
+      throw new ExpressError(listOfErrors, 400);
+    }
+    if (Company.findOne(req.body.handle)) {
       throw new ExpressError('Company already exists', 400)
     }
     const company = await Company.create(req.body);
