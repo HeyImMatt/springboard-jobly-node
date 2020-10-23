@@ -61,7 +61,27 @@ describe('POST /companies', () => {
 
   test('Missing data fails json validation', async () => {
     const resp = await request(app).post('/companies').send({handle: 'failco'});
-
     expect(resp.statusCode).toBe(400);
   })
+
+  test('Prevents creating duplicate company', async () => {
+    const resp = await request(app).post('/companies').send({
+      handle: testCompany1.handle, 
+      name: testCompany1.name
+    });
+    expect(resp.statusCode).toBe(400);
+  })
+})
+
+describe('GET /companies/[handle]', () => {
+  test('Gets single company data', async () => {
+    const resp = await request(app).get(`/companies/${testCompany1.handle}`);
+    expect(resp.statusCode).toBe(200);
+    expect(resp.body.company).toEqual(testCompany1);;
+    })
+
+    test('Returns 404 error if company not found', async () => {
+      const resp = await request(app).get('/companies/nocompany');
+      expect(resp.statusCode).toBe(404);
+    })
 })
