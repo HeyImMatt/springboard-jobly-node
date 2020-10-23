@@ -39,4 +39,35 @@ class Company {
     const companiesRes = await db.query(finalQuery, queryValues);
     return companiesRes.rows;
   }
+
+  static async findOne(handle) {
+    const result = await db.query(`
+      SELECT * FROM companies
+      WHERE handle = $1`, [handle]);
+    if (result.rows === 0) {
+      return null;
+    }
+    return result.rows[0]
+  }
+
+  static async create(data) {
+    const result = await db.query(
+      `INSERT INTO companies (
+          handle,
+          name,
+          num_employees,
+          description,
+          logo_url)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING handle,
+          name,
+          num_employees,
+          description,
+          logo_url`,
+      [data.handle, data.name, data.num_employees, data.description, data.logo_url]
+    );
+    return result.rows[0];
+  }
 }
+
+module.exports = Company;
