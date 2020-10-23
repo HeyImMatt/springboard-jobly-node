@@ -44,8 +44,8 @@ class Company {
     const result = await db.query(`
       SELECT * FROM companies
       WHERE handle = $1`, [handle]);
-    if (result.rows === 0) {
-      return null;
+    if (result.rows.length === 0) {
+      throw new ExpressError(`No company with the handle '${handle}' found.`, 404);
     }
     return result.rows[0]
   }
