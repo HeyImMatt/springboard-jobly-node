@@ -51,7 +51,8 @@ class Company {
   }
 
   static async create(data) {
-    const result = await db.query(
+    try {
+      const result = await db.query(
       `INSERT INTO companies (
           handle,
           name,
@@ -67,6 +68,9 @@ class Company {
       [data.handle, data.name, data.num_employees, data.description, data.logo_url]
     );
     return result.rows[0];
+    } catch(e) {
+      throw new ExpressError(`Error creating company: ${e}`, 400)
+    }
   }
 
   static async update(handle, data) {
@@ -90,6 +94,19 @@ class Company {
     }
 
     return result.rows[0];
+  }
+
+  static async remove(handle) {
+    const result = await db.query(
+      `DELETE FROM companies
+          WHERE handle=$1
+        RETURNING handle`,
+      [handle]
+    );
+
+    if (result.rows.length === 0) {
+      throw new ExpressError(`There is no company with handle '${handle}'`, 404);
+    }
   }
 }
 

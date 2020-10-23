@@ -24,11 +24,8 @@ router.post('/', async (req, res, next) => {
       const listOfErrors = ajv.errors.map(error => error.message);
       throw new ExpressError(listOfErrors, 400);
     }
-    if (Company.findOne(req.body.handle)) {
-      throw new ExpressError('Company already exists', 400)
-    }
     const company = await Company.create(req.body);
-    return res.json({ company });
+    return res.status(201).json({ company });
   } catch (e) {
     return next(e);
   }
@@ -52,6 +49,15 @@ router.put('/:handle', async (req, res, next) => {
     }
     const company = await Company.update(req.params.handle, req.body);
     return res.json({ company });
+  } catch (e) {
+    return next(e);
+  }
+})
+
+router.delete('/:handle', async (req, res, next) => {
+  try {
+    await Company.remove(req.params.handle);
+    return res.json({ message: 'Company deleted' });
   } catch (e) {
     return next(e);
   }
