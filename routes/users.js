@@ -2,6 +2,8 @@ const express = require('express');
 const ExpressError = require('../helpers/expressError');
 const User = require('../models/user')
 const Ajv = require('ajv');
+const { ensureCorrectUser, authRequired } = require('../middleware/auth');
+const createToken = require('../helpers/createToken');
 const userNewSchema = require('../schemas/userNewSchema.json')
 const userUpdateSchema = require('../schemas/userUpdateSchema.json')
 
@@ -9,7 +11,7 @@ const router = new express.Router();
 
 const ajv = new Ajv();
 
-router.get('/', async (req, res, next) => {
+router.get('/', authRequired, async (req, res, next) => {
   try {
     const users = await User.findAll();
     return res.json({ users });
@@ -18,7 +20,7 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.get('/:username',async (req, res, next) => {
+router.get('/:username', authRequired, async (req, res, next) => {
   try {
     const user = await User.findOne(req.params.username);
     return res.json({ user });
@@ -42,7 +44,7 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.patch('/:username', async (req, res, next) => {
+router.patch('/:username', ensureCorrectUser, async (req, res, next) => {
   try {
     if ('username' in req.body || 'is_admin' in req.body) {
         throw new ExpressError(
@@ -63,7 +65,7 @@ router.patch('/:username', async (req, res, next) => {
   }
 });
 
-router.delete('/:username', async (req, res, next) => {
+router.delete('/:username', ensureCorrectUser, async (req, res, next) => {
   try {
     await User.remove(req.params.username);
     return res.json({ message: 'User deleted' });

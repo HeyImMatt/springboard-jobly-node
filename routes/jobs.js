@@ -2,13 +2,14 @@ const express = require('express');
 const ExpressError = require('../helpers/expressError');
 const Job = require('../models/job')
 const Ajv = require('ajv');
+const { adminRequired, authRequired } = require('../middleware/auth');
 const jobSchema = require('../schemas/jobSchema.json')
 
 const router = new express.Router();
 
 const ajv = new Ajv();
 
-router.get('/', async (req, res, next) => {
+router.get('/', authRequired, async (req, res, next) => {
   try {
     const jobs = await Job.findAll(req.query);
     return res.json({ jobs });
@@ -17,7 +18,7 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', adminRequired, async (req, res, next) => {
   try {
     const valid = ajv.validate(jobSchema, req.body);
     if (!valid) {
@@ -31,7 +32,7 @@ router.post('/', async (req, res, next) => {
   }
 })
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', authRequired, async (req, res, next) => {
   try {
     const job = await Job.findOne(req.params.id);
     return res.json({ job });
@@ -40,7 +41,7 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
-router.patch('/:id', async (req, res, next) => {
+router.patch('/:id', adminRequired, async (req, res, next) => {
   try {
     const valid = ajv.validate(jobSchema, req.body);
     if (!valid) {
@@ -54,7 +55,7 @@ router.patch('/:id', async (req, res, next) => {
   }
 })
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', adminRequired, async (req, res, next) => {
   try {
     await Job.remove(req.params.id);
     return res.json({ message: 'Job deleted' });

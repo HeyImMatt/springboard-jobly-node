@@ -2,13 +2,14 @@ const express = require('express');
 const ExpressError = require('../helpers/expressError');
 const Company = require('../models/company')
 const Ajv = require('ajv');
+const { authRequired, adminRequired } = require('../middleware/auth');
 const companySchema = require('../schemas/companySchema.json')
 
 const router = new express.Router();
 
 const ajv = new Ajv();
 
-router.get('/', async (req, res, next) => {
+router.get('/', authRequired, async (req, res, next) => {
   try {
     const companies = await Company.findAll(req.query);
     return res.json({ companies });
@@ -17,7 +18,7 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', adminRequired, async (req, res, next) => {
   try {
     const valid = ajv.validate(companySchema, req.body);
     if (!valid) {
@@ -31,7 +32,7 @@ router.post('/', async (req, res, next) => {
   }
 })
 
-router.get('/:handle', async (req, res, next) => {
+router.get('/:handle', authRequired, async (req, res, next) => {
   try {
     const company = await Company.findOne(req.params.handle);
     return res.json({ company });
@@ -40,7 +41,7 @@ router.get('/:handle', async (req, res, next) => {
   }
 })
 
-router.patch('/:handle', async (req, res, next) => {
+router.patch('/:handle', adminRequired, async (req, res, next) => {
   try {
     const valid = ajv.validate(companySchema, req.body);
     if (!valid) {
@@ -54,7 +55,7 @@ router.patch('/:handle', async (req, res, next) => {
   }
 })
 
-router.delete('/:handle', async (req, res, next) => {
+router.delete('/:handle', adminRequired, async (req, res, next) => {
   try {
     await Company.remove(req.params.handle);
     return res.json({ message: 'Company deleted' });
