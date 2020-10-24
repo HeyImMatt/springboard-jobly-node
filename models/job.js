@@ -40,7 +40,7 @@ class Job {
     if (result.rows.length === 0) {
       throw new ExpressError(`No job with the id '${id}' found.`, 404);
     }
-    job = result.rows[0];
+    const job = result.rows[0];
 
     const companyResult = await db.query(
       `SELECT name, num_employees, description, logo_url 

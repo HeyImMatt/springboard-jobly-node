@@ -13,7 +13,7 @@ const testCompany1 = {
 
 beforeEach(async () => {
   try {
-    await Company.create(testCompany1)
+    await Company.create(testCompany1);
   } catch(e) {
     console.log(e);
   }
@@ -77,7 +77,7 @@ describe('GET /companies/[handle]', () => {
   test('Gets single company data', async () => {
     const resp = await request(app).get(`/companies/${testCompany1.handle}`);
     expect(resp.statusCode).toBe(200);
-    expect(resp.body.company).toEqual(testCompany1);;
+    expect(resp.body.company).toEqual({...testCompany1, jobs: []});;
     })
 
     test('Returns 404 error if company not found', async () => {
