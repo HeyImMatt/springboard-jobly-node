@@ -1,8 +1,16 @@
 
 CREATE TABLE companies (
-  handle text PRIMARY KEY,
-  name text NOT NULL UNIQUE,
-  num_employees integer,
-  description text,
-  logo_url text
+  handle TEXT PRIMARY KEY,
+  name TEXT NOT NULL UNIQUE,
+  num_employees INTEGER,
+  description TEXT,
+  logo_url TEXT
+);
+
+CREATE TABLE jobs (
+  id SERIAL PRIMARY KEY,
+  title TEXT NOT NULL,
+  salary FLOAT,
+  equity FLOAT CHECK(equity <= 1.0),
+  company_handle TEXT NOT NULL REFERENCES companies ON DELETE CASCADE
 );
