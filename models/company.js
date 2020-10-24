@@ -1,5 +1,6 @@
 const db = require("../db");
 const ExpressError = require("../helpers/ExpressError");
+const partialUpdate = require('../helpers/partialUpdate');
 
 class Company {
 
@@ -74,26 +75,14 @@ class Company {
   }
 
   static async update(handle, data) {
-    const result = await db.query(
-      `UPDATE companies SET
-          name=($1),
-          num_employees=($2),
-          description=($3),
-          logo_url=($4)
-          WHERE handle=$5
-        RETURNING handle,
-          name,
-          num_employees,
-          description,
-          logo_url`,
-      [data.name, data.num_employees, data.description, data.logo_url, handle]
-    );
+    const { query, values } = partialUpdate('companies', data, 'handle', handle)
+      const result = await db.query(query, values);
 
-    if (result.rows.length === 0) {
-      throw new ExpressError(`There is no company with handle '${handle}'`, 404);
-    }
+      if (result.rows.length === 0) {
+        throw new ExpressError(`There is no company with handle '${handle}'`, 404);
+      };
 
-    return result.rows[0];
+      return result.rows[0];
   }
 
   static async remove(handle) {

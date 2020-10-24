@@ -86,6 +86,35 @@ describe('GET /companies/[handle]', () => {
     })
 })
 
+describe('PATCH /companies', () => {
+  test('Edits a company', async () => {
+    const resp = await request(app).patch(`/companies/${testCompany1.handle}`).send({
+      handle: `${testCompany1.handle}`,
+      name: 'Updated Company Name',
+    });
+
+    expect(resp.statusCode).toBe(200);
+    expect(resp.body.company).toEqual({...testCompany1, name: 'Updated Company Name'});
+  });
+
+  test('Returns 404 error if company not found', async () => {
+    const resp = await request(app).patch('/companies/nocompany').send({
+      handle: `${testCompany1.handle}`,
+      name: 'Updated Company Name',
+    });
+    expect(resp.statusCode).toBe(404);
+  })
+
+  test('Prevents a bad update', async () => {
+    const resp = await request(app).patch(`/companies/${testCompany1.handle}`).send({
+        handle: `${testCompany1.handle}`, 
+        name: `${testCompany1.name}`,
+        notRealProp: 'Do not update',
+      });
+    expect(resp.statusCode).toBe(400);
+  });
+})
+
 describe('DELETE /companies/[handle]', () => {
   test('Deletes a company', async () => {
     const resp = await request(app).delete(`/companies/${testCompany1.handle}`);
