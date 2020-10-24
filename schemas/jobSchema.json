@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "jobSchema",
+  "type": "object",
+  "title": "The root schema",
+  "description": "The root schema comprises the entire JSON document.",
+  "default": {},
+  "examples": [
+      {
+          "title": "Software Engineer",
+          "salary": 80000.0,
+          "equity": 0.01,
+          "company_handle": "myco"
+      }
+  ],
+  "required": [
+      "title",
+      "company_handle"
+  ],
+  "properties": {
+      "title": {
+          "$id": "#/properties/title",
+          "type": "string",
+          "title": "The title schema",
+          "description": "Job title",
+          "default": "",
+          "examples": [
+              "Software Engineer"
+          ]
+      },
+      "salary": {
+          "$id": "#/properties/salary",
+          "type": "number",
+          "title": "The salary schema",
+          "description": "Annual salary for the job.",
+          "default": 0.0,
+          "examples": [
+              80000.0
+          ]
+      },
+      "equity": {
+          "$id": "#/properties/equity",
+          "type": "number",
+          "title": "The equity schema",
+          "description": "Percentage of equity ownership in the company",
+          "default": 0.0,
+          "examples": [
+              0.01
+          ]
+      },
+      "company_handle": {
+          "$id": "#/properties/company_handle",
+          "type": "string",
+          "title": "The company_handle schema",
+          "description": "Handle of the company this job is for.",
+          "default": "",
+          "examples": [
+              "myco"
+          ]
+      },
+      "_token": {
+        "$id": "/properties/token",
+        "type": "string",
+        "title": "The Token Schema ",
+        "default": "",
+        "examples": [
+            "foo123"
+        ]
+    }
+  },
+  "additionalProperties": false
+}

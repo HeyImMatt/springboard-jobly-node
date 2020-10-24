@@ -20,7 +20,10 @@
   "homepage": "https://github.com/HeyImMatt/springboard-jobly-node#readme",
   "dependencies": {
     "ajv": "^6.12.6",
+    "bcrypt": "^5.0.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "pg": "^8.4.1",
     "supertest": "^5.0.0"
